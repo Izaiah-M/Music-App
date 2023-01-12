@@ -27,6 +27,38 @@ const Spotify = {
     } else {
       const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}
         `;
+      window.location = accessUrl;
+    }
+  },
+  async search(term) {
+    const accessTokn = Spotify.getAccessTocken();
+    const baseUrl = "https://api.spotify.com";
+    const endPoint = `/v1/search?type=track&q=${term}`;
+    const urlToFetch = `${baseUrl}${endPoint}`;
+
+    try {
+      const response = await fetch(urlToFetch, {
+        headers: { Authorization: `Bearer ${accessTokn}` },
+      });
+
+      if (response.ok) {
+        const jsonResponse = await response.json();
+
+        if (!jsonResponse.tracks) {
+          return [];
+        }
+
+        return jsonResponse.tracks.items.map((track) => ({
+          id: track.id,
+          name: track.name,
+          artist: track.artist[0].name,
+          album: track.album.name,
+          uri: track.uri,
+        }));
+      }
+    } catch (error) {
+      alert(error);
+      console.log(error);
     }
   },
 };
