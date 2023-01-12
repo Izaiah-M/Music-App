@@ -9,6 +9,11 @@ export class Track extends React.Component {
       return <button className="Track-action">+</button>;
     }
   }
+
+  addTrack() {
+    this.props.onAdd(this.props.track);
+  }
+
   render() {
     return (
       <div className="Track">
