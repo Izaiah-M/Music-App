@@ -5,13 +5,20 @@ import "./TrackList.css";
 export class TrackList extends React.Component {
   render() {
     const tracks = this.props.tracks;
+    const onRemove = this.props.onRemove;
+    const isRemoval = this.props.isRemoval;
 
     return (
       <div className="TrackList">
-        {/* <!-- You will add a map method that renders a set of Track components  --> */}
         {tracks.map((track) => {
           return (
-            <Track track={track} key={track.id} onAdd={this.props.onAdd} />
+            <Track
+              track={track}
+              key={track.id}
+              onAdd={this.props.onAdd}
+              onRemove={onRemove}
+              isRemoval={isRemoval}
+            />
           );
         })}
       </div>
