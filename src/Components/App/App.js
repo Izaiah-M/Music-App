@@ -3,52 +3,15 @@ import React from "react";
 import { Playlist } from "../Playlist/Playlist";
 import { SearchBar } from "../SearchBar/SearchBar";
 import { SearchResults } from "../SearchResults/SearchResults";
+import Spotify from "../../util/Spotify";
 
 export class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      SearchResults: [
-        {
-          id: 1,
-          name: "Bless Me",
-          artist: "Maverick City",
-          album: "2022",
-        },
-        {
-          id: 2,
-          name: "Hands in it",
-          artist: "Mike",
-          album: "Hands",
-        },
-        {
-          id: 3,
-          name: "Joy",
-          artist: "Tauren Wells",
-          album: "Joy",
-        },
-      ],
+      SearchResults: [],
       playlistName: "Mine",
-      playlistTracks: [
-        {
-          id: 4,
-          name: "Bless Me",
-          artist: "Maverick City",
-          album: "2022",
-        },
-        {
-          id: 5,
-          name: "Hands in it",
-          artist: "Mike",
-          album: "Hands",
-        },
-        {
-          id: 6,
-          name: "Joy",
-          artist: "Tauren Wells",
-          album: "Joy",
-        },
-      ],
+      playlistTracks: [],
     };
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
@@ -82,12 +45,17 @@ export class App extends React.Component {
 
   // Saves the playlist to a users account
   savePlaylist() {
-    const trackURIs = this.state.playlistTracks.map((track) => track.uri);
+    const trackUris = this.state.playlistTracks.map((track) => track.uri);
+    Spotify.savePlaylist(this.state.playlistName, trackUris).then(() => {
+      this.setState({ playlistName: "New Playlist", playlistTracks: [] });
+    });
   }
 
   // Search method that handles the searches
   search(term) {
-    console.log(term);
+    Spotify.search(term).then((searchResults) => {
+      this.setState({ SearchResults: searchResults });
+    });
   }
 
   render() {
