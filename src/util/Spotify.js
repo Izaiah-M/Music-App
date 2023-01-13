@@ -7,7 +7,6 @@ const Spotify = {
     if (accessToken) {
       return accessToken;
     }
-
     // check for access tocken match
     // window.location.href shows the url of the website you currently on
     const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
@@ -23,34 +22,42 @@ const Spotify = {
 
       return accessToken;
     } else {
-      const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}
+      const accessUrl = `https://accounts.spotify.com/authorize?response_type=token&client_id=${clientID}&scope=playlist-modify-public&redirect_uri=${redirectUri}
         `;
-      window.location = accessUrl;
+      return (window.location = accessUrl);
     }
   },
 
-  search(term) {
+  async search(term) {
     const accessToken = Spotify.getAccessTocken();
-    const urlToFetch = `https://api.spotify.com/v1/search?type=track&q=${term}`;
-
-    return fetch(urlToFetch, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((jsonResponse) => {
-        if (!jsonResponse.tracks) {
-          return [];
+    try {
+      const response = await fetch(
+        `https://api.spotify.com/v1/search?type=track&q=${term}`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${accessToken}` },
         }
-        return jsonResponse.tracks.items.map((track) => ({
-          id: track.id,
-          name: track.name,
-          artist: track.artist[0].name,
-          album: track.album.name,
-          uri: track.uri,
-        }));
-      });
+      );
+
+      // console.log(response.json());
+      const jsonResponse = await response.json();
+      const tracks = jsonResponse.tracks;
+
+      const items = tracks.items;
+      console.log(items);
+
+      const result = items.map((track) => ({
+        id: track.id,
+        name: track.name,
+        artist: track.artists[0].name,
+        album: track.album.name,
+        uri: track.uri,
+      }));
+
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   savePlaylist(name, trackUris) {

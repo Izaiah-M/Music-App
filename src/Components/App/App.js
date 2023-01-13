@@ -9,9 +9,9 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      SearchResults: [],
       playlistName: "My Playlist",
       playlistTracks: [],
+      SearchResults: [],
     };
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
@@ -52,9 +52,11 @@ export class App extends React.Component {
   }
 
   // Search method that handles the searches
-  search(term) {
-    Spotify.search(term).then((searchResults) => {
-      this.setState({ SearchResults: searchResults });
+  async search(term) {
+    const results = await Spotify.search(term);
+
+    this.setState({
+      SearchResults: results,
     });
   }
 
