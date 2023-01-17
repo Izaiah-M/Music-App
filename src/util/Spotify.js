@@ -2,9 +2,9 @@ const clientID = "4fff23c99ab74f8aa1b7fd4fdbac92a8";
 const redirectUri = "https://jamajamm.netlify.app/";
 let accessToken;
 
-window.onload = () => {
-  Spotify.getAccessToken();
-};
+// window.onload = () => {
+//   Spotify.getAccessToken();
+// };
 
 const Spotify = {
   getAccessToken() {
