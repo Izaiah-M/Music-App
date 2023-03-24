@@ -1,4 +1,6 @@
-const clientID = "4fff23c99ab74f8aa1b7fd4fdbac92a8";
+const { REACT_APP_CLIENT_ID } = process.env;
+
+const clientID = REACT_APP_CLIENT_ID;
 const redirectUri = "https://jamajamm.netlify.app/";
 let accessToken;
 
@@ -48,7 +50,7 @@ const Spotify = {
       const tracks = jsonResponse.tracks;
 
       const items = tracks.items;
-      console.log(items);
+      // console.log(items);
 
       const result = items.map((track) => ({
         id: track.id,
